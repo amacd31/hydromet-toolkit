@@ -42,3 +42,10 @@ double nse(const void * obsv, const void * simv, int n) {
         return 1 - e1 / e2;
     }
 }
+
+/*
+    Root Mean Square Error
+*/
+double rmse(const void * obsv, const void * simv, int n) {
+    return sqrt(mse(obsv, simv, n));
+}
