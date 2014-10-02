@@ -3,6 +3,22 @@
 #include <gsl/gsl_statistics.h>
 
 /*
+    Mean Square Error
+*/
+double mse(const void * obsv, const void * simv, int n) {
+    const double * obs = (double *) obsv;
+    const double * sim = (double *) simv;
+
+    int t;
+    double sum_y = 0;
+    for (t = 0; t < n; t++) {
+        sum_y += pow(sim[t] - obs[t], 2);
+    }
+
+    return sum_y / n;
+}
+
+/*
     Nash-Sutcliffe efficiency.
 */
 double nse(const void * obsv, const void * simv, int n) {
