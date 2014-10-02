@@ -18,6 +18,12 @@ class NSETestCase(unittest.TestCase):
 
         self.assertEqual(result, 0.783479081472161)
 
+    def test_nse_perfect(self):
+        result = nse(np.array([1.,2.,3.,4.,5.]),
+                np.array([1.,2.,3.,4.,5.]))
+
+        self.assertEqual(result, 1)
+
 
 if __name__ == '__main__':
     unittest.main()

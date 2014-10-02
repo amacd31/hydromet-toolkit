@@ -19,5 +19,10 @@ double nse(const void * obsv, const void * simv, int n) {
         e2 += pow(obs[t] - mean, 2);
     }
 
-    return 1 - e1 / e2;
+    if (e1 == 0) {
+        return 1;
+    }
+    else {
+        return 1 - e1 / e2;
+    }
 }
