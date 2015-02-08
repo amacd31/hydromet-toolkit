@@ -15,8 +15,6 @@ class RMSETestCase(unittest.TestCase):
         pass
 
     def test_rmse(self):
-        print(self.test_obs)
-        print(self.test_sim)
         result = rmse(self.test_obs, self.test_sim)
 
         self.assertEqual(result, math.sqrt(2.6))
@@ -26,6 +24,15 @@ class RMSETestCase(unittest.TestCase):
             np.array([1.,2.,3.,4.,5.]))
 
         self.assertEqual(result, 0)
+
+    def test_rmse_bad(self):
+        m = np.mean([1.,2.,3.,4.,5.])
+        sim = np.array([m, m, m, m, m])
+        result = rmse(np.array([1.,2.,3.,4.,5.]),
+                    sim
+                )
+
+        self.assertEqual(result, math.sqrt(2))
 
 
 if __name__ == '__main__':

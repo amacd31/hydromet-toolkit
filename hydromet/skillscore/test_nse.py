@@ -24,6 +24,16 @@ class NSETestCase(unittest.TestCase):
 
         self.assertEqual(result, 1)
 
+    def test_nse_bad(self):
+        m = np.mean([1.,2.,3.,4.,5.])
+        sim = np.array([m, m, m, m, m])
+        result = nse(np.array([1.,2.,3.,4.,5.]),
+                    sim
+                )
+
+        # Score of zero when no better than the mean.
+        self.assertEqual(result, 0)
+
 
 if __name__ == '__main__':
     unittest.main()
