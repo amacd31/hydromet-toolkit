@@ -13,7 +13,7 @@ def get_monthly_anomaly(ts, start, end):
 
         :returns: pandas.TimeSeries -- Monthly anomalies.
     """
-    monthly = ts.asfreq('M')
+    monthly = ts.resample('MS')
     base = monthly.ix[start:end]
     mean = base.groupby(base.index.month).mean()
 
@@ -37,7 +37,7 @@ def get_annual_anomaly(ts, start, end):
 
         :returns: pandas.TimeSeries -- Annual anomalies.
     """
-    annual = ts.asfreq('A')
+    annual = ts.resample('AS')
     base = annual.ix[start:end]
     mean = base.groupby(base.index.year).mean().mean()
 
