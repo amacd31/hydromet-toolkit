@@ -7,10 +7,13 @@ import subprocess
 import numpy as np
 import pandas as pd
 
+from sqlalchemy.exc import IntegrityError
+
 from datetime import date
 
 import catchment_tools as ct
 from tsdb.database import TSDB
+from tsdb.exceptions import DuplicateError
 
 def main(tsdb_name, grid_dir, awap_rainfall_dir):
     db = TSDB(tsdb_name)
@@ -38,11 +41,11 @@ def main(tsdb_name, grid_dir, awap_rainfall_dir):
             catchment_data_template[catchment_id] = {'date': [], 'value': []}
             try:
                 db.add_timeseries(catchment_id)
-            except:
+            except IntegrityError:
                 pass
             try:
                 db.add_timeseries_instance(catchment_id, 'D', 'AWAP rainfall', source = 'BOM_AWAP', measurand = 'P')
-            except:
+            except DuplicateError:
                 pass
         except ValueError:
             pass
