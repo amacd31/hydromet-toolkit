@@ -68,7 +68,7 @@ def main(tsdb_name, grid_dir, awap_rainfall_dir):
                     results[catchment]['value'].append(r[catchment])
 
         for c in results.keys():
-            db.write(catchment, 'D', (results[c]['date'], results[c]['value']), source = 'BOM_AWAP', measurand = 'P')
+            db.write(c, 'D', (results[c]['date'], results[c]['value']), source = 'BOM_AWAP', measurand = 'P')
 
 if __name__ == '__main__':
 
