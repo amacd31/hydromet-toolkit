@@ -84,7 +84,7 @@ if __name__ == '__main__':
                         default = './data/awap_rainfall/',
                         help='Directory containg AWAP data files.')
 
-    parser.add_argument('--tsdb_name', type=str,
+    parser.add_argument('--tsdb-name', type=str,
                         default = 'awap_rainfall_db',
                         help='TSDB to load the data into.')
 
