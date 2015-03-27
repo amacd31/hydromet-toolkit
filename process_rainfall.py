@@ -85,7 +85,7 @@ if __name__ == '__main__':
                         help='Directory containg AWAP data files.')
 
     parser.add_argument('--tsdb-name', type=str,
-                        default = 'awap_rainfall_db',
+                        default = 'hm_tsdb',
                         help='TSDB to load the data into.')
 
     args = parser.parse_args()
