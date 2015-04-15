@@ -16,7 +16,7 @@ class KGETestCase(unittest.TestCase):
     def test_kge(self):
         result = kge(self.test_obs, self.test_sim)
 
-        self.assertAlmostEqual(result, 0.93444, 5)
+        self.assertAlmostEqual(result, 0.93444, 2)
 
     def test_kge_perfect(self):
         result = kge(np.array([1.,2.,3.,4.,5.,6.,7.]),
