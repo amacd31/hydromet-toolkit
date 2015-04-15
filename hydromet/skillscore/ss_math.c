@@ -33,13 +33,19 @@ double kge(const void * obsv, const void * simv, int n) {
     double obs_std = gsl_stats_sd(obs, 1, n);
     double sim_std = gsl_stats_sd(sim, 1, n);
 
-    double alpha = sim_std / obs_std;
-    double beta = (sim_mean / obs_mean); // / obs_std;
+    double beta = (sim_mean / obs_mean);
     double cov_so = gsl_stats_covariance_m(sim, 1, obs, 1, n, sim_mean, obs_mean);
     // Round to the nearest 5th decimal place to avoid floating point
     // comparison errors.
     cov_so = round(cov_so * 10000) / 10000;
-    double r = cov_so / ((round(sim_std * obs_std * 10000) / 10000));
+
+    // Default to zero, we set later if sim_std != 0
+    double alpha = 0;
+    double r = 0;
+    if (sim_std != 0) {
+        alpha = sim_std / obs_std;
+        r = cov_so / ((round(sim_std * obs_std * 10000) / 10000));
+    }
 
     return 1 - sqrt(pow(r - 1, 2) + pow(alpha - 1, 2) + pow(beta - 1, 2));
 }
