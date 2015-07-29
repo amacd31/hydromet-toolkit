@@ -4,7 +4,7 @@ import timeit
 import pandas as pd
 import numpy as np
 import pyopencl as cl
-from tsdb.database import TSDB
+from phildb.database import PhilDB
 from gr4j import gr4j
 import sys
 
@@ -140,11 +140,11 @@ if __name__ == '__main__':
     parser.add_argument('catchment_area', type=str,
                         help='Square km area of catchment (for converting runoff to mm).')
 
-    parser.add_argument('--tsdb-name', type=str,
+    parser.add_argument('--phildb-name', type=str,
                         default = 'hm_tsdb',
-                        help='TSDB to load the data from.')
+                        help='PhilDB to load the data from.')
 
     args = parser.parse_args()
-    db = TSDB(args.tsdb_name)
+    db = PhilDB(args.phildb_name)
     diff_evolve(args.station_id, db, "{0}_params.json".format(args.station_id), args.catchment_area)
 
