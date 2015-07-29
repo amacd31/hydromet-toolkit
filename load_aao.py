@@ -13,11 +13,11 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 from urllib2 import urlopen
 
-from tsdb.database import TSDB
-from tsdb.exceptions import DuplicateError
+from phildb.database import PhilDB
+from phildb.exceptions import DuplicateError
 
-def main(tsdb_name):
-    db = TSDB(tsdb_name)
+def main(phildb_name):
+    db = PhilDB(phildb_name)
     try:
         db.add_measurand('CX', 'CLIMATE_INDEX', 'Climate Index')
     except IntegrityError:
@@ -46,9 +46,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Load AAO data.')
 
-    parser.add_argument('--tsdb-name', type=str,
+    parser.add_argument('--phildb-name', type=str,
                         default = 'hm_tsdb',
-                        help='TSDB to load the data into.')
+                        help='PhilDB to load the data into.')
 
     args = parser.parse_args()
-    main(args.tsdb_name)
+    main(args.phildb_name)

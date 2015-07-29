@@ -14,11 +14,11 @@ from sqlalchemy.exc import IntegrityError
 from datetime import date
 
 import catchment_tools as ct
-from tsdb.database import TSDB
-from tsdb.exceptions import DuplicateError
+from phildb.database import PhilDB
+from phildb.exceptions import DuplicateError
 
-def main(tsdb_name, grid_dir, awap_rainfall_dir, start_date, end_date):
-    db = TSDB(tsdb_name)
+def main(phildb_name, grid_dir, awap_rainfall_dir, start_date, end_date):
+    db = PhilDB(phildb_name)
 
     catchment_grids = glob.glob(grid_dir + '*.csv')
     rainfall_ids = db.ts_list(source = 'BOM_AWAP', measurand = 'P')
@@ -75,9 +75,9 @@ if __name__ == '__main__':
                         default = './data/awap_rainfall/',
                         help='Directory containg AWAP data files.')
 
-    parser.add_argument('--tsdb-name', type=str,
+    parser.add_argument('--phildb-name', type=str,
                         default = 'hm_tsdb',
-                        help='TSDB to load the data into.')
+                        help='PhilDB to load the data into.')
 
     parser.add_argument('start_date', type=str,
                         help='Start date of period to load data for.')
@@ -90,4 +90,4 @@ if __name__ == '__main__':
     start_date = datetime.strptime(args.start_date, '%Y-%m-%d')
     end_date = datetime.strptime(args.end_date, '%Y-%m-%d')
 
-    main(args.tsdb_name, args.grid_dir, args.awap_dir, start_date, end_date)
+    main(args.phildb_name, args.grid_dir, args.awap_dir, start_date, end_date)
