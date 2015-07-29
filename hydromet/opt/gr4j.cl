@@ -1,4 +1,5 @@
 #pragma OPENCL EXTENSION cl_amd_printf : enable
+
 /**
 GR4J OpenCL implementation for parallel computation of simulations from many parameter sets.
 
@@ -97,7 +98,7 @@ kernel void gr4j(__global const float* precip,
     float R2;
     float QR;
     float QD;
-    float sum_square_error = 0;
+    float sum = 0;
     for (i = 0; i < data_len; i++) {
         P = precip[i];
         E = potential_evap[i];
@@ -148,11 +149,33 @@ kernel void gr4j(__global const float* precip,
         QD = fmax(0, UH2[0]*0.1+groundwater_exchange);
         qsim[gid*data_len + i] = QR + QD;
 
-        // Calc MSE sum
-        sum_square_error += pow(qsim[gid*data_len + i] - qobs[i], 2);
+        // Running total for calculating the mean later.
+        sum += qsim[gid*data_len + i];
     }
 
 
-    skillscores[gid] = sum_square_error / data_len;
+    /*
+        Nash-Sutcliffe efficiency.
 
+        References:
+            * Nash, Jea, and J. V. Sutcliffe. 1970. "River Flow Forecasting through Conceptual Models Part I-A Discussion of Principles." Journal of Hydrology 10 (3): 282-90.
+    */
+    float m = sum / data_len;
+    float nse;
+    int offset = gid*data_len;
+    float e1 = 0;
+    float e2 = 0;
+    for (t = 0; t < data_len; t++) {
+        e1 += pow(qobs[t] - qsim[t + offset], 2);
+        e2 += pow(qobs[t] - m, 2);
+    }
+
+    if (e1 == 0) {
+        nse = 1;
+    }
+    else {
+        nse = 1 - e1 / e2;
+    }
+
+    skillscores[gid] = nse;
 }

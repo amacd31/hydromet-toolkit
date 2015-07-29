@@ -104,9 +104,9 @@ def diff_evolve(station_id, db, out_file, catchment_area):
         candidate_pop, candidate_scores = opencl(p, pet, sf, candidate_params.astype(np.float32))
         candiate_pop = candidate_pop.reshape([iterations, len(p)])
 
-        better_scores = np.array(candidate_scores) < np.array(initial_scores)
+        better_scores = np.array(candidate_scores) > np.array(initial_scores)
         if i % 20 == 0:
-            print len(params[better_scores]), min(candidate_scores), min(initial_scores), np.nanmean(candidate_scores), np.nanmean(initial_scores)
+            print len(params[better_scores]), max(candidate_scores), max(initial_scores), np.nanmean(candidate_scores), np.nanmean(initial_scores)
 
         params[better_scores] = candidate_params[better_scores]
 
