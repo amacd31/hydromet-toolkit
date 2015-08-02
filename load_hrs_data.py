@@ -4,10 +4,10 @@ import sys
 import datetime
 import pandas
 from sqlalchemy.exc import IntegrityError
-from tsdb.database import TSDB
+from phildb.database import PhilDB
 
-def main(tsdb_name, hrs_data_files):
-    db = TSDB(tsdb_name)
+def main(phildb_name, hrs_data_files):
+    db = PhilDB(phildb_name)
 
     db.add_source('BOM_HRS', 'Bureau of Meteorology; Hydrological Reference Stations dataset.')
 
@@ -38,12 +38,12 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Load the HRS data.')
 
-    parser.add_argument('--tsdb-name', type=str,
+    parser.add_argument('--phildb-name', type=str,
                         default = 'hm_tsdb',
-                        help='TSDB to load the data into.')
+                        help='PhilDB to load the data into.')
 
     parser.add_argument('hrs_data_files', type=str, nargs='+',
                         help='HRS data files to load.')
 
     args = parser.parse_args()
-    main(args.tsdb_name, args.hrs_data_files)
+    main(args.phildb_name, args.hrs_data_files)
