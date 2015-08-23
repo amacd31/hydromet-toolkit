@@ -2,7 +2,7 @@ import ctypes
 import numpy as np
 import os
 
-mse_c = ctypes.cdll.LoadLibrary(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'ss_math.so')).mse
+mse_c = ctypes.cdll.LoadLibrary(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'libhydromath.dylib')).mse
 mse_c.restype = ctypes.c_double
 
 def mse(obs, sim):

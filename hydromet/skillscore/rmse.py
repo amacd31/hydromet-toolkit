@@ -2,7 +2,7 @@ import ctypes
 import numpy as np
 import os
 
-rmse_c = ctypes.cdll.LoadLibrary(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'ss_math.so')).rmse
+rmse_c = ctypes.cdll.LoadLibrary(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'libhydromath.dylib')).rmse
 rmse_c.restype = ctypes.c_double
 
 def rmse(obs, sim):

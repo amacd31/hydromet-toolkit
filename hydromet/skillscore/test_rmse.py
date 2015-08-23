@@ -3,7 +3,7 @@ import unittest
 import math
 import numpy as np
 
-from rmse import rmse
+from . import rmse
 
 class RMSETestCase(unittest.TestCase):
 

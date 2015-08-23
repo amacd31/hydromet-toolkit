@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from nse import nse
+from . import nse
 
 class NSETestCase(unittest.TestCase):
 

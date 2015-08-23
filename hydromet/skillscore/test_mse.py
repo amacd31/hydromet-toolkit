@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from mse import mse
+from . import mse
 
 class MSETestCase(unittest.TestCase):
 
