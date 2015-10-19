@@ -40,7 +40,7 @@ def main(phildb_name):
 
     soi = bdp.read_soi_html(urlopen("ftp://ftp.bom.gov.au/anon/home/ncc/www/sco/soi/soiplaintext.html"))
 
-    db.write('SOI', 'MS', (soi.index, soi.values), source = 'BOM', measurand = 'CX')
+    db.write('SOI', 'MS', soi, source = 'BOM', measurand = 'CX')
 
 if __name__ == '__main__':
 

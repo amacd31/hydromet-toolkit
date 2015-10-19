@@ -40,7 +40,7 @@ def main(phildb_name):
     dateparse = lambda x,y: datetime.strptime(x+y, '%Y%m')
     aao = pd.read_csv(urlopen('http://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_ao_index/aao/monthly.aao.index.b79.current.ascii'), header=None, parse_dates=[[0,1]], sep='\s+', engine='python', date_parser=dateparse, index_col=0, names=['year', 'month', 'aao_value'])
 
-    db.write('AAO', 'MS', (aao.index, aao.aao_value), source = 'NOAA', measurand = 'CX')
+    db.write('AAO', 'MS', aao, source = 'NOAA', measurand = 'CX')
 
 if __name__ == '__main__':
 

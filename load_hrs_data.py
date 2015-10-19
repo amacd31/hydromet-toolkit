@@ -29,7 +29,7 @@ def main(phildb_name, hrs_data_files):
             except IntegrityError:
                 pass
             db.add_timeseries_instance(station_id, freq, header, measurand = 'Q', source = 'BOM_HRS')
-            db.write(station_id, freq, (df.index, df['Q'].values), measurand = 'Q', source = 'BOM_HRS')
+            db.write(station_id, freq, df, measurand = 'Q', source = 'BOM_HRS')
         except ValueError as e:
             print("Skipping unloadable text file: ", hrs_file)
             pass
