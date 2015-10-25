@@ -8,7 +8,7 @@ from phildb.database import PhilDB
 from hydromet.loader import load_cdo
 
 def main():
-    parser = argparse.ArgumentParser(description='Create database from pywws data.')
+    parser = argparse.ArgumentParser(description='Write Bureau of Meterology Climate Data Online data into a PhilDB.')
     parser.add_argument('dbname')
     parser.add_argument('files', nargs="+")
 
