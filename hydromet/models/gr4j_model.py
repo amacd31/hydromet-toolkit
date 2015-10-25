@@ -16,8 +16,11 @@ class GR4J(object):
         self.calibration_start_date = calib_start
         self.calibration_end_date = calib_end
 
-    def run(self, p, pe):
-        sims, self.__states = gr4j(p, pe, self.__params, self.__states, True)
+    def run(self, p, pe, save_states = False):
+        sims, states = gr4j(p, pe, self.__params, self.__states, True)
+
+        if save_states:
+            self.__states = states
 
         return sims
 
