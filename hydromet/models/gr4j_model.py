@@ -10,6 +10,10 @@ class GR4J(object):
                         'X3': 10,
                         'X4': 0}
 
+    @property
+    def name(self):
+        return "gr4j"
+
     def init(self, warmup_start, warmup_end, calib_start, calib_end):
         self.warmup_start_date = warmup_start
         self.warmup_end_date = warmup_end
