@@ -9,6 +9,7 @@ from matplotlib import pyplot as plt
 from IPython.terminal.embed import InteractiveShellEmbed
 ipshell = InteractiveShellEmbed()
 
+import bom_data_parser as bdp
 import hydromet
 import hydromet_graph
 from hydromet import __version__
