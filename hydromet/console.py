@@ -14,6 +14,8 @@ import hydromet_graph
 from hydromet import __version__
 from phildb.database import PhilDB
 
+from hydromet.io import load_model_config, read_predictors
+
 def main():
     parser = argparse.ArgumentParser(description='Load hydromet toolkit with a PhilDB database.')
     parser.add_argument('dbname', help="PhilDB database to open", nargs='?')

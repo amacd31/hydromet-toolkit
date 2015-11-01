@@ -1,3 +1,5 @@
+from hydromet import disaggregate
+from hydromet import models
 
 from ._version import get_versions
 __version__ = get_versions()['version']
