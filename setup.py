@@ -16,6 +16,11 @@ setup(
     url='https://github.com/amacd31/hydromet-toolkit',
     install_requires=['numpy', 'pandas'],
     packages = ['hydromet'],
+    entry_points = {
+        'console_scripts': [
+            'hm = hydromet.console:main',
+        ]
+    },
     test_suite = 'tests',
     classifiers=[
         'Development Status :: 3 - Alpha',
