@@ -1,3 +1,5 @@
+import pandas as pd
+
 from numpy import sqrt
 
 def dist_free_cusum(timeseries):
@@ -43,3 +45,17 @@ def dist_free_cusum(timeseries):
             }
 
     return results
+
+def ols(ts):
+    """
+        Calculate ordinary least squares model from a pandas time series.
+    """
+
+    df = ts.reset_index()
+    df.columns = [ 'index', 'values' ]
+    model = pd.ols(y = df['values'], x = pd.to_datetime(df['index']).astype(int).astype(float), intercept = True)
+
+    df['linear_regression'] = model.predict()
+    df.set_index('index', inplace = True)
+
+    return model, df
