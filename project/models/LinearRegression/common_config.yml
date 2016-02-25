@@ -1,0 +1,32 @@
+warmup:
+  start_date: null
+  end_date: null
+calibration:
+  start_date: 1980-01-01
+  end_date: 2008-12-01
+predictors:
+  P:
+    db: 'phildb'
+    db_attrs:
+      measurand: 'P'
+      source: 'BOM_AWAP'
+    lag: 0
+    source_freq: 'D'
+    model_freq: 'MS'
+  PE:
+    db: 'phildb'
+    db_attrs:
+      measurand: 'PE'
+      source: 'CSIRO_AWAP_26J'
+    lag: 0
+    source_freq: 'MS'
+    model_freq: 'MS'
+predictands:
+  Q:
+    db: 'phildb'
+    db_attrs:
+      measurand: 'Q'
+      source: 'BOM_HRS'
+    lag: 0
+    source_freq: 'D'
+    model_freq: 'MS'
