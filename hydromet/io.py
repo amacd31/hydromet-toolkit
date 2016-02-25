@@ -9,19 +9,19 @@ def load_model_config(filename):
     return config
 
 def get_idx(config, typ):
-    if typ == 'all':
+    if typ is None:
         idx = slice()
-    elif typ == 'calibration':
-        idx = slice(config['calibration']['start_date'], config['calibration']['end_date'])
+    else:
+        idx = slice(config[typ]['start_date'], config[typ]['end_date'])
 
     return idx
 
-def read_predictors(db, config, station_id, typ = 'all', idx = None):
+def read_predictors(db, config, station_id, typ = None, idx = None):
     if idx is None:
         idx = get_idx(config, typ)
     return __read_predict(db, config['predictors'], station_id, idx)
 
-def read_predictands(db, config, station_id, typ = 'all', idx = None):
+def read_predictands(db, config, station_id, typ = None, idx = None):
     if idx is None:
         idx = get_idx(config, typ)
     return __read_predict(db, config['predictands'], station_id, idx)
