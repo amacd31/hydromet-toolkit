@@ -1,3 +1,4 @@
+import numpy as np
 import yaml
 from hydromet.disaggregate import monthly_to_daily
 
@@ -7,18 +8,37 @@ def load_model_config(filename):
 
     return config
 
-def read_predictors(db, config, station_id):
-    predictor_config = config['predictors']
-    predictors = {}
-    for predictor, attrs in predictor_config.items():
-        predictors[predictor] = __resample(db.read(station_id, attrs['source_freq'], **attrs['db_attrs']), attrs['source_freq'], attrs['model_freq'])
+def get_idx(config, typ):
+    if typ == 'all':
+        idx = slice()
+    elif typ == 'calibration':
+        idx = slice(config['calibration']['start_date'], config['calibration']['end_date'])
 
-    return predictors
+    return idx
 
-def __resample(series, source_freq, model_freq):
+def read_predictors(db, config, station_id, typ = 'all', idx = None):
+    if idx is None:
+        idx = get_idx(config, typ)
+    return __read_predict(db, config['predictors'], station_id, idx)
+
+def read_predictands(db, config, station_id, typ = 'all', idx = None):
+    if idx is None:
+        idx = get_idx(config, typ)
+    return __read_predict(db, config['predictands'], station_id, idx)
+
+def __read_predict(db, config, station_id, idx):
+    predicts = {}
+    for predict, attrs in config.items():
+        predicts[predict] = __resample(db.read(station_id, attrs['source_freq'], **attrs['db_attrs']), attrs['source_freq'], attrs['model_freq']).ix[idx]
+
+    return predicts
+
+def __resample(series, source_freq, model_freq, how = 'sum'):
     if source_freq == model_freq:
         return series
     elif source_freq == 'MS' and model_freq == 'D':
         return monthly_to_daily(series)
+    elif source_freq == 'D' and model_freq == 'MS':
+        return series.resample(model_freq, how = how)
     else:
-        raise NotImplemented("Source frequency '{0}' can not be converted to model frequency '{1}' at this time.")
+        raise NotImplementedError("Source frequency '{0}' can not be converted to model frequency '{1}' at this time.".format(source_freq, model_freq))
