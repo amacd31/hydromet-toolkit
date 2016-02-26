@@ -10,7 +10,7 @@ predictors:
     db_attrs:
       measurand: 'P'
       source: 'BOM_AWAP'
-    lag: 0
+    lag: 1
     source_freq: 'D'
     model_freq: 'MS'
   PE:
@@ -18,7 +18,7 @@ predictors:
     db_attrs:
       measurand: 'PE'
       source: 'CSIRO_AWAP_26J'
-    lag: 0
+    lag: 1
     source_freq: 'MS'
     model_freq: 'MS'
 predictands:
