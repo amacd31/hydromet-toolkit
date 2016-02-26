@@ -29,7 +29,15 @@ def read_predictands(db, config, station_id, typ = None, idx = None):
 def __read_predict(db, config, station_id, idx):
     predicts = {}
     for predict, attrs in config.items():
-        predicts[predict] = __resample(db.read(station_id, attrs['source_freq'], **attrs['db_attrs']), attrs['source_freq'], attrs['model_freq']).ix[idx]
+        predicts[predict] = __resample(
+            db.read(
+                station_id,
+                attrs['source_freq'],
+                **attrs['db_attrs']
+            ),
+            attrs['source_freq'],
+            attrs['model_freq']
+        ).shift(-attrs['lag']).ix[idx]
 
     return predicts
 
