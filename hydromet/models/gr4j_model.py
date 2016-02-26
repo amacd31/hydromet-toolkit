@@ -64,7 +64,7 @@ class GR4J(object):
 
         return res_nse
 
-    def forecast(self, fc_date, warmup_data, fc_data):
+    def forecast(self, warmup_data, fc_data):
 
         self.warmup(warmup_data)
 
