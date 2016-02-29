@@ -1,7 +1,7 @@
 import ctypes
 from hydromet.hydromath import __lib, __ffi
 
-nse_c = __lib.nse
+nse_c = __lib.nse_c
 
 def nse(obs, sim):
     assert len(obs) == len(sim)

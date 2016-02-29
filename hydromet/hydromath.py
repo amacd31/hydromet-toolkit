@@ -3,24 +3,19 @@ import os
 from ctypes.util import find_library
 from cffi import FFI
 
-search_dirs = [
-    '/usr/local/include',
-    '/usr/include',
-]
+class MissingLibError(Exception):
+    pass
 
-h_filename = None
+if 'HYDROMATH_DIR' in os.environ:
+    HYDROMATH_DIR = os.environ['HYDROMATH_DIR']
 
-for directory in search_dirs:
-    tmp_name = os.path.join(directory, 'hydromath.h')
-    if os.path.isfile(tmp_name) or os.path.islink(tmp_name):
-        h_filename = tmp_name
-        break
-else:
-    print("hydromath.h not found, is it installed?")
+    h_filename = os.path.join(HYDROMATH_DIR, 'hydromath.h')
+    so_filename = os.path.join(HYDROMATH_DIR, find_library('hydromath'))
 
-if h_filename is not None:
     __ffi = FFI()
     with open(h_filename) as header:
         __ffi.cdef(header.read())
 
-    __lib = __ffi.dlopen('/usr/local/lib/libhydromath.so')
+    __lib = __ffi.dlopen(so_filename)
+else:
+    raise MissingLibError("HYDROMATH_DIR environment variable not set. Unable to find libhydromath")
