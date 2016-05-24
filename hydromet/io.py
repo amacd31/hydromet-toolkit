@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import yaml
 from hydromet.disaggregate import monthly_to_daily
 
@@ -10,26 +11,26 @@ def load_model_config(filename):
 
 def get_idx(config, typ):
     if typ is None:
-        idx = slice()
+        idx = slice(None)
     else:
         idx = slice(config[typ]['start_date'], config[typ]['end_date'])
 
     return idx
 
-def read_predictors(db, config, station_id, typ = None, idx = None):
+def read_predictors(db, config, station_id, catchment_attrs, typ = None, idx = None):
     if idx is None:
         idx = get_idx(config, typ)
-    return __read_predict(db, config['predictors'], station_id, idx)
+    return __read_predict(db, config['predictors'], station_id, catchment_attrs, idx)
 
-def read_predictands(db, config, station_id, typ = None, idx = None):
+def read_predictands(db, config, station_id, catchment_attrs, typ = None, idx = None):
     if idx is None:
         idx = get_idx(config, typ)
-    return __read_predict(db, config['predictands'], station_id, idx)
+    return __read_predict(db, config['predictands'], station_id, catchment_attrs, idx)
 
-def __read_predict(db, config, station_id, idx):
+def __read_predict(db, config, station_id, catchment_attrs, idx):
     predicts = {}
     for predict, attrs in config.items():
-        predicts[predict] = __resample(
+        tmp = pd.DataFrame({'predict': __resample(
             db.read(
                 station_id,
                 attrs['source_freq'],
@@ -37,7 +38,17 @@ def __read_predict(db, config, station_id, idx):
             ),
             attrs['source_freq'],
             attrs['model_freq']
-        ).shift(-attrs['lag']).ix[idx]
+        ).shift(-attrs['lag']).ix[idx]})
+
+        if 'transform' in attrs:
+            expr_attrs = {}
+            for key in attrs['transform']['catchment_attrs']:
+                expr_attrs[key] = catchment_attrs[key]
+
+            expr = attrs['transform']['expr'].format(**expr_attrs)
+            predicts[predict] = tmp.eval(expr)
+        else:
+            predicts[predict] = tmp['predict']
 
     return predicts
 
