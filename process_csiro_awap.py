@@ -16,16 +16,30 @@ import catchment_tools as ct
 from phildb.database import PhilDB
 from phildb.exceptions import DuplicateError
 
-def main(phildb_name, grid_dir, awap_dir):
+def main(phildb_name, grid_dir, awap_dir, measurand):
     db = PhilDB(phildb_name)
+
+    source = 'CSIRO_AWAP_26J'
+    if measurand == 'P':
+        data_type = 'Precip'
+    elif measurand == 'PE':
+        data_type = 'FWPT'
+    else:
+        raise ValueError("Unknown measurand {0}".format(measurand))
+
     try:
         db.add_measurand('PE', 'POTENTIAL_EVAPORATION', 'Potential Evaporation')
-    except:
+    except DuplicateError:
+        pass
+
+    try:
+        db.add_measurand('P', 'PRECIPTATION', 'Preciptation')
+    except DuplicateError:
         pass
 
     try:
         db.add_source('CSIRO_AWAP_26J', 'CSIRO AWAP')
-    except:
+    except DuplicateError:
         pass
 
     catchment_grids = glob.glob(grid_dir + '*.csv')
@@ -42,31 +56,31 @@ def main(phildb_name, grid_dir, awap_dir):
             catchment_data_template[catchment_id] = {'date': [], 'value': []}
             try:
                 db.add_timeseries(catchment_id)
-            except IntegrityError:
+            except DuplicateError:
                 pass
             try:
-                db.add_timeseries_instance(catchment_id, 'MS', 'CSIRO AWAP Potential evaporation run 26j', source = 'CSIRO_AWAP_26J', measurand = 'PE')
+                db.add_timeseries_instance(catchment_id, 'MS', 'CSIRO AWAP Potential evaporation run 26j', source = 'CSIRO_AWAP_26J', measurand = measurand)
             except DuplicateError:
                 pass
         except ValueError:
             pass
 
-    awap_zip = awap_dir + "FWPT/{year}0101_{year}1231.FWPT.run26j.flt.zip"
+    awap_zip = awap_dir + "{data_type}/{year}0101_{year}1231.{data_type}.run26j.flt.zip"
 
-    csiro_year_data = './csiro_year_data_tmp'
+    csiro_year_data = '/dev/shm/csiro_year_data_tmp'
     for year in range(1900, 2014):
         results = copy.deepcopy(catchment_data_template)
 
-        zip_file = awap_zip.format(year = year)
-        print zip_file
-        p = subprocess.Popen(['unzip', '-d', csiro_year_data, zip_file])
+        zip_file = awap_zip.format(year = year, data_type = data_type)
+        print(zip_file)
+        p = subprocess.Popen(['unzip', '-o', '-d', csiro_year_data, zip_file])
         outdata, errdata = p.communicate()
 
 
         for month in range(1, 13):
             print((year, month))
             ndays = calendar.monthrange(year, month)
-            awap_grid_file = csiro_year_data + "/AWAP/Run26j/FWPT/mth_FWPT_{year}{month:02d}{ndays:02d}.flt".format(year = year, month = month, ndays = ndays[1])
+            awap_grid_file = csiro_year_data + "/AWAP/Run26j/{data_type}/mth_{data_type}_{year}{month:02d}{ndays:02d}.flt".format(year = year, month = month, ndays = ndays[1], data_type = data_type)
 
             # Convert from metres/day to mm/month.
             process_method = lambda x: (np.array(x) * 1000).mean() * ndays[1]
@@ -77,13 +91,16 @@ def main(phildb_name, grid_dir, awap_dir):
                 results[catchment]['value'].append(r[catchment])
 
         for c in results.keys():
-            db.write(c, 'MS', (results[c]['date'], results[c]['value']), source = 'CSIRO_AWAP_26J', measurand = 'PE')
+            db.write(c, 'MS', pd.Series(results[c]['value'], results[c]['date']), source = 'CSIRO_AWAP_26J', measurand = measurand)
 
         shutil.rmtree(csiro_year_data)
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser = argparse.ArgumentParser(description='Process CSIRO AWAP data.')
+    parser.add_argument('measurand', type=str,
+                        help='Measurand to load. (e.g. P or PE)')
+
     parser.add_argument('--grid_dir', type=str,
                         default = './data/catchment_grids/',
                         help='Directory containg catchment grid CSV files.')
@@ -97,4 +114,4 @@ if __name__ == '__main__':
                         help='PhilDB to load the data into.')
 
     args = parser.parse_args()
-    main(args.phildb_name, args.grid_dir, args.awap_dir)
+    main(args.phildb_name, args.grid_dir, args.awap_dir, args.measurand)
