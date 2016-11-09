@@ -44,6 +44,11 @@ def main(phildb_name):
     )
 
     for i, storage in water_storages.iterrows():
+        try:
+            get_water_storage(storage.station_id, date(1800,1,1), date.today())
+        except NoDataError:
+            continue
+
         print("Processing storage {0}".format(storage.station_no))
 
         try:
@@ -56,10 +61,7 @@ def main(phildb_name):
             pass
 
 
-        try:
-            db.write(storage.station_no, 'D', get_water_storage(storage.station_id, date(1800,1,1), date.today()), source = 'BOM_KIWIS', measurand = 'STORAGE')
-        except NoDataError:
-            pass
+        db.write(storage.station_no, 'D', , source = 'BOM_KIWIS', measurand = 'STORAGE')
 
 if __name__ == '__main__':
 
