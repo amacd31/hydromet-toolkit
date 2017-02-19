@@ -1,7 +1,7 @@
 import glob
 from hydromet.catchments import create_grids
 
-grid_dir = 'data/hrs_geojson'
+grid_dir = 'data/hrs_boundaries'
 catchment_files = glob.glob(grid_dir + "/*.json")
 
 catchments = []
