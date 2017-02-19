@@ -1,7 +1,7 @@
 import os
 import numpy as np
 
-from catchment_cutter import get_grid_cells
+from catchment_tools import get_grid_cells
 
 def create_grids(catchments, in_directory, out_directory, grid_file):
     """
@@ -18,7 +18,7 @@ def create_grids(catchments, in_directory, out_directory, grid_file):
     """
     for catchment in catchments:
         boundary = os.path.join(in_directory, catchment + '.json')
-        cells = np.asarray(get_grid_cells(boundary, grid_file))
+        cells = np.asarray(get_grid_cells(boundary, grid_file, 0.3))
 
         np.savetxt(os.path.join(out_directory, catchment + '.csv'), cells, fmt="%.2f", delimiter=',')
 
