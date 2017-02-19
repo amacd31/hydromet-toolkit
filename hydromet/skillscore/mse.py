@@ -1,7 +1,7 @@
 import ctypes
 from hydromet.hydromath import __lib, __ffi
 
-mse_c = __lib.mse_c
+mse_c = __lib.mse
 
 def mse(obs, sim):
     assert len(obs) == len(sim)
