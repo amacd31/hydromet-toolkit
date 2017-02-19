@@ -45,7 +45,7 @@ def main(phildb_name):
 
     for i, storage in water_storages.iterrows():
         try:
-            get_water_storage(storage.station_id, date(1800,1,1), date.today())
+            storage_data = get_water_storage(storage.station_id, date(1800,1,1), date.today())
         except NoDataError:
             continue
 
@@ -61,7 +61,7 @@ def main(phildb_name):
             pass
 
 
-        db.write(storage.station_no, 'D', , source = 'BOM_KIWIS', measurand = 'STORAGE')
+        db.write(storage.station_no, 'D', storage_data, source = 'BOM_KIWIS', measurand = 'STORAGE')
 
 if __name__ == '__main__':
 
