@@ -1,3 +1,4 @@
+import pandas as pd
 import zipfile
 import bom_data_parser as bdp
 from kiwis_pie import KIWIS
@@ -78,7 +79,10 @@ def read_streamflow(station_id, from_date = '1900-01-01', to_date = '2100-01-01'
     if len(sf) == 0:
         raise ValueError("No streamflow could be read.")
 
-    sf.index = sf.index.normalize()
+    # Remove the time component and move forward by a day because,
+    # without the time/timezone all stations across Australian timezones fall
+    # on the previous day. Adding one day pushes the daily data onto the correct day.
+    sf.index = sf.index.normalize() + pd.DateOffset(days=1)
 
     return sf
 
