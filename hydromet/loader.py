@@ -57,7 +57,7 @@ def read_streamflow(station_id, from_date = '1900-01-01', to_date = '2100-01-01'
 
     ts_id = k.get_timeseries_list(
         station_no = '410730',
-        ts_name = 'PR01QaQc.Merged.DailyMean.09HR',
+        ts_name = 'DMQaQc.Merged.DailyMean.09HR',
         return_fields = [
             'station_no',
             'ts_id',
