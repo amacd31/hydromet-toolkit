@@ -87,12 +87,12 @@ def read_streamflow(station_id, from_date = '1900-01-01', to_date = '2100-01-01'
     return sf
 
 
-def load_streamflow(db, station_id):
+def load_streamflow(db, station_no, station_id):
 
     sf = read_streamflow(station_id)
 
     try:
-        db.add_timeseries(station_id)
+        db.add_timeseries(station_no)
     except DuplicateError:
         pass
 
@@ -107,8 +107,8 @@ def load_streamflow(db, station_id):
         pass
 
     try:
-        db.add_timeseries_instance(station_id, 'D', '', source='BOM_WISKI', measurand='Q')
+        db.add_timeseries_instance(station_no, 'D', '', source='BOM_WISKI', measurand='Q')
     except DuplicateError:
         pass
 
-    db.write(station_id, 'D', sf, source='BOM_WISKI', measurand='Q')
+    db.write(station_no, 'D', sf, source='BOM_WISKI', measurand='Q')
