@@ -23,19 +23,19 @@ def get_cc_hrs_station_list(update = False):
     if update:
         station_attrs = []
         for i, station in station_subset.iterrows():
-            attrs = k.get_station_list(station_no = station.station_no, parametertype_name = 'Water Course Discharge', return_fields=['station_id','custom_attributes'])
+            attrs = k.get_station_list(station_no = station.station_no, parametertype_name = 'Water Course Discharge', return_fields=['station_id','station_no','custom_attributes'])
             station_attrs.append(attrs.set_index('station_id'))
 
-        station_attributes = pd.concat(station_attrs)
+        station_attributes = pd.concat(station_attrs).drop_duplicates()
         station_attributes.to_csv('station_attributes.csv')
     else:
         station_attributes = pd.read_csv('station_attributes.csv', index_col=0)
 
     cc_providers = pd.read_csv('cc_providers.csv', skiprows=8)
 
-    station_list = station_attributes.ix[station_attributes.DATA_OWNER.isin(cc_providers.ProviderID.values)].index.values
+    station_list = station_attributes.ix[station_attributes.DATA_OWNER.isin(cc_providers.ProviderID.values)].station_no
 
-    return station_list
+    return station_list.drop_duplicates()
 
 if __name__ == "__main__":
     for station in get_cc_hrs_station_list():
