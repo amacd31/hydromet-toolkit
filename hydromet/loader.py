@@ -67,7 +67,9 @@ def read_streamflow(station_id, from_date = '1900-01-01', to_date = '2100-01-01'
     )['ts_id']
 
     if len(ts_id) != 1:
-        raise ValueError("Unable to get unique series from WISKI for '{0}'".format(station_id))
+        # TODO: Specify which provider to use if more than one provider supplies
+        # data for a given station. As opposed to just using the first available.
+        ts_id = ts_id.iloc[0]
 
     sf = k.get_timeseries_values(
         ts_id = ts_id,
