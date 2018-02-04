@@ -87,9 +87,9 @@ def read_streamflow(station_id, from_date = '1900-01-01', to_date = '2100-01-01'
     return sf
 
 
-def load_streamflow(db, station_no, station_id):
+def load_streamflow(db, station_no):
 
-    sf = read_streamflow(station_id)
+    sf = read_streamflow(station_no)
 
     try:
         db.add_timeseries(station_no)
